@@ -1,0 +1,39 @@
+body {
+    background: #939393;
+    //background: white url("images/background.jpg");
+}
+
+.navbar {
+    border-radius:0;
+}
+
+.navbar-brand {
+    font-family:'Satisfy', cursive;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+li {
+    list-style-type: none;
+}
+
+#player_container {
+    background: #939393;
+}
+
+#audioPlayer {
+    width:100%;
+}
+
+#genre_field, #audioPlayer {
+    background: #151515;
+    color: white;
+}
+
+.btn{
+    min-width:250px;
+    min-height:80px;
+    font-size:40px;
+}

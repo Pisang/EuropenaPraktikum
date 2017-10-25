@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% if all_documents %}
+
+<div class="container-fluid" id="player_container">
+
+    <div class="row-fluid">
+        <div class="col-lg-6">
+            <audio controls id="audioPlayer"
+                   src="http://127.0.0.1:9999/2059207/data_sounds_T214_25">
+                Not supported format!
+            </audio>
+            <div class="jumbotron" id="genre_field">
+                <b>I think the genre is: <var id="genre"> - </var></b>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="btn-group" role="group" id="thumbs-buttons">
+
+                <form id="ok_form" onSubmit="return yes();" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-success" name="ok" value="OK">
+                </form>
+                <form id="nok_form" onSubmit="return no();" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-danger" name="not_ok" value="Not OK">
+                </form>
+
+
+                <!--form id="ok_form" class="form-group" onSubmit="return test();" method="post">
+                       {% csrf_token %}
+                       <input type="submit" class="btn btn-success" name="ok" value="OK">
+                       <input type="submit" class="btn btn-danger" name="not_ok" value="Not OK">
+                </form-->
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="col-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div><h3>Metadata</h3></div>
+                </div>
+                <div class="panel-body">
+                    <br>
+                    <b>ID:</b> <var id="song_id"></var> <br>
+                    <b>Title:</b> <var id="song_title"></var> <br>
+                    <b>Creator:</b> <var id="song_creator"></var><br>
+                    <b>Description:</b> <var id="song_description"></var><br>
+                    <b>Country:</b> <var id="song_country"></var><br>
+                    <b>Spatial:</b> <var id="song_spatial"></var><br>
+                    <b>Genre:</b> <var id="song_genre"></var><br>
+                    <b>Approved:</b> <var id="song_approved"></var>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- musictable -->
+<div class="container-fluid" id="playlist_container">
+
+    <table id="musictable" class="display-inverse" width="100%" cellspacing="0">
+        <!-- Table Head -->
+        <thead class="thead">
+        <tr>
+            <th>Play</th>
+            <th>Title</th>
+            <th>Id</th>
+            <th>Creator</th>
+            <th>Genre</th>
+            <th>Description</th>
+            <th>Country</th>
+            <th>Spatial</th>
+            <th>Approved</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for document in all_documents %}
+        <tr>
+            <th>
+                <li><a href="http://127.0.0.1:9999{{ document.id }}.mp3"><span
+                        class="glyphicon glyphicon-play"></span></a>
+                </li>
+            </th>
+            <th> {{ document.title }}</th>
+            <th> {{ document.id }}</th>
+            <th> {{ document.creator }}</th>
+            <th> {{ document.known_genre }}</th>
+            <th> {{ document.description }}</th>
+            <th> {{ document.country }}</th>
+            <th> {{ document.spatial }}</th>
+            <th> {{ document.approved }}</th>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% else %}
+<h3>There is no data</h3>
+{% endif %}
+
+<script class="init" type="text/javascript">
+audioPlayer();
+  function audioPlayer(){
+    $("#audioPlayer")[0].src = $("#musictable li a")[8];
+
+    $("#musictable li a").click(function(e){
+	  e.preventDefault();
+	  $("#audioPlayer")[0].src = this;
+	  $("#audioPlayer")[0].play();
+	});
+  }
+
+
+
+
+</script>
+
+
+<script class="init" type="text/javascript">
+var active_song_id
+
+$(document).ready(function() {
+   $('#musictable').DataTable( {
+     "pagingType": "full_numbers",
+     "columnDefs": [
+            {
+                "targets": [ 2 ],
+                "visible": true,
+                "searchable": true
+            },
+            {
+                "targets": [ 5 ],
+                "visible": false,
+                "searchable": true
+            },
+            {
+                "targets": [ 6 ],
+                "visible": false,
+                "searchable": true
+            },
+            {
+                "targets": [ 7 ],
+                "visible": false,
+                "searchable": true
+            }
+     ]
+   } );
+
+   var table = $('#musictable').DataTable();
+    $('#musictable tbody').on('click', 'tr', function () {
+        var data = table.row( this ).data();
+        $("#song_genre").text(data[4]);
+        $("#genre").text(data[4]);
+        active_song_id = data[2];
+        $("#song_id").text(data[2]);
+        $("#song_title").text(data[1]);
+        $("#song_creator").text(data[3]);
+        $("#song_description").text(data[5]);
+        $("#song_country").text(data[6]);
+        $("#song_spatial").text(data[7]);
+        $("#song_approved").text(data[8]);
+    } );
+} );
+
+function eval(content){
+  //alert(content);
+  if (content > 0) {
+    link = document.URL + active_song_id.substring(1) + '/1';
+    document.getElementById('ok_form').action = link;
+  } else {
+      link = document.URL + active_song_id.substring(1) + '/-1';
+      document.getElementById('ok_form').action = link;
+    }
+
+}
+
+function test(){
+  link = document.URL + active_song_id.substring(1)+'/';
+  document.getElementById('ok_form').action = link;
+}
+
+
+function yes(){
+  link = document.URL + active_song_id.substring(1) + '/1' + '/';
+  document.getElementById('ok_form').action = link;
+}
+function no(){
+  link = document.URL + active_song_id.substring(1) + '/-1' + '/';
+  document.getElementById('nok_form').action = link;
+}
+
+
+
+</script>
+
+{% endblock %}
