@@ -71,7 +71,7 @@ class Main:
 
 
 def main():
-    # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
     # read the local path to the Euopena directory
     dir = os.path.dirname(__file__)
