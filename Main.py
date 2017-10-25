@@ -85,36 +85,36 @@ def main():
         ########################################################################
 
         ### prepare file: reduce columns, clinsing, ... -> <filename>_clean.csv
-        # Main.prepare_Document(file_path)
+        Main.prepare_Document(file_path)
 
         ### apply hardcoded rules to get a groundtruth out of the data
-        # filename = file_path + Main.original_file + '_clean.csv'
-        # clean_file = pd.read_csv(filename, sep=";", encoding="utf-8", index_col='id')
-        # Main.apply_hardcoded_Rules(clean_file, file_path)
+        filename = file_path + Main.original_file + '_clean.csv'
+        clean_file = pd.read_csv(filename, sep=";", encoding="utf-8", index_col='id')
+        Main.apply_hardcoded_Rules(clean_file, file_path)
         #
-        # Main.make_groundtruth_dense(file_path)
+        Main.make_groundtruth_dense(file_path)
 
         doc2vec_file_path = file_path + 'doc2vec_files'
         cluster = Doc2vec_clustering()
 
         ### perform TF-IDF - just for comparison
-        # print('\n\n TF - IDF \n\n')
-        # for i in range(5):
-        #     filename_dgt = file_path + '/doc2vec_files/' + Main.original_file + '_groundtruth_dense.csv'
-        #     cluster.do_tfidf_clustering(filename_dgt)
+        print('\n\n TF - IDF \n\n')
+        for i in range(5):
+            filename_dgt = file_path + '/doc2vec_files/' + Main.original_file + '_groundtruth_dense.csv'
+            cluster.do_tfidf_clustering(filename_dgt)
 
         ### train dec2vec classificator: fusion types:
         ### - no_fusion
         ### - early_fusion
         ### - late_fusion
 
-        # print('\n\n NO FUSION \n\n')
-        # for i in range(5):
-        #     cluster.train_classifier(doc2vec_file_path, fusion_type='no_fusion')
+        print('\n\n NO FUSION \n\n')
+        for i in range(5):
+            cluster.train_classifier(doc2vec_file_path, fusion_type='no_fusion')
 
-        # print('\n\n EARLY FUSION \n\n')
-        # for i in range(5):
-        #     cluster.train_classifier(doc2vec_file_path, fusion_type='early_fusion')
+        print('\n\n EARLY FUSION \n\n')
+        for i in range(5):
+            cluster.train_classifier(doc2vec_file_path, fusion_type='early_fusion')
 
         print('\n\n LATE FUSION \n\n')
         for i in range(5):
